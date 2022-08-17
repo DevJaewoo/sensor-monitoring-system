@@ -18,4 +18,8 @@ public class Client {
     private Long id;
 
     private String name;
+
+    public Client(String name) {
+        this.name = name;
+    }
 }
