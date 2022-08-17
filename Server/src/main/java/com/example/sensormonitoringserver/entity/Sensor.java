@@ -34,4 +34,12 @@ public class Sensor {
     private void prePersist() {
         createdDate = LocalDateTime.now();
     }
+
+    public Sensor(Client client, double temp, int eco2, int tvoc, Coord accel) {
+        this.client = client;
+        this.temp = temp;
+        this.eco2 = eco2;
+        this.tvoc = tvoc;
+        this.accel = accel;
+    }
 }
