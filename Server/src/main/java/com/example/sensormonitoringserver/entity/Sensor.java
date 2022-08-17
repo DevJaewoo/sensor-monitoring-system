@@ -40,6 +40,6 @@ public class Sensor {
         this.temp = temp;
         this.eco2 = eco2;
         this.tvoc = tvoc;
-        this.accel = accel;
+        if(accel != null) this.accel = accel;
     }
 }
