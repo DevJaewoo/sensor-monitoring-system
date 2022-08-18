@@ -10,6 +10,8 @@ SERVER_PORT = 8080
 CLIENT_ID = 1
 REQUEST_URL = 'http://{0}:{1}/api/{2}/sensor'.format(SERVER_IP, SERVER_PORT, CLIENT_ID)
 
+SENSOR_INTERVAL = 5 # sec
+
 i2c = smbus.SMBus(1)
 
 ccs811 = CCS811(i2c)
@@ -19,7 +21,7 @@ sleep(0.1)
 
 while True:
 
-	sleep(1)
+	sleep(SENSOR_INTERVAL)
 
 	try:
 		[eco2, tvoc] = ccs811.readData()
@@ -37,9 +39,9 @@ while True:
 			'tvoc': tvoc,
 			'temp': round(temp, 2),
 			'accel': {
-				'x': round(accel['x'], 2),
-				'y': round(accel['y'], 2),
-				'z': round(accel['z'], 2)
+				'x': round(accel['x'], 4),
+				'y': round(accel['y'], 4),
+				'z': round(accel['z'], 4)
 			}
 		}
 
