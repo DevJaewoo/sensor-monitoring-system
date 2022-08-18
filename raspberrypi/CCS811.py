@@ -61,4 +61,8 @@ class CCS811:
 		eCO2 = (data[0] << 8 | data[1]) & (~0x8000)
 		tvoc = (data[2] << 8 | data[3]) & (~0x8000)
 
+		# I2C Read Error
+		if tvoc >= 16384:
+			tvoc = 0
+
 		return [eCO2, tvoc]

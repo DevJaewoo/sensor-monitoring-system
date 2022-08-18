@@ -15,7 +15,8 @@ while True:
 		[eco2, tvoc] = ccs811.readData()
 		print('eCO2: {} TVOC: {}'.format(eco2, tvoc))
 		print(sensor.get_accel_data())
-	except:
-		print('Except')
+		print(sensor.get_temp_data())
+	except Exception as e:
+		print('Except: {}'.format(e))
 
 	sleep(1)
