@@ -5,6 +5,7 @@ import com.example.sensormonitoringserver.entity.Sensor;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
@@ -20,7 +21,7 @@ public class SensorRepositoryImpl implements SensorRepositoryCustom {
     private final JPAQueryFactory queryFactory;
 
     @Override
-    public List<Sensor> search(Long clientId, SensorSearch sensorSearch) {
+    public List<Sensor> search(Long clientId, SensorSearch sensorSearch, Pageable pageable) {
 
         return queryFactory
                 .selectFrom(sensor)
@@ -30,6 +31,9 @@ public class SensorRepositoryImpl implements SensorRepositoryCustom {
                         dateAfter(sensorSearch.getFrom()),
                         dateBefore(sensorSearch.getTo())
                 )
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .orderBy(sensor.createdDate.desc())
                 .fetch();
     }
 

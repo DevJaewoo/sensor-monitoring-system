@@ -9,6 +9,7 @@ import com.example.sensormonitoringserver.entity.Sensor;
 import com.example.sensormonitoringserver.repository.ClientRepository;
 import com.example.sensormonitoringserver.repository.SensorRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -43,8 +44,8 @@ public class SensorService {
         sensorRepository.save(sensor);
     }
 
-    public List<SensorDto> searchSensorData(Long clientId, SensorSearch sensorSearchDto) {
-        return sensorRepository.search(clientId, sensorSearchDto).stream()
+    public List<SensorDto> searchSensorData(Long clientId, SensorSearch sensorSearchDto, Pageable pageable) {
+        return sensorRepository.search(clientId, sensorSearchDto, pageable).stream()
                 .map(SensorDto::new)
                 .collect(Collectors.toList());
     }
