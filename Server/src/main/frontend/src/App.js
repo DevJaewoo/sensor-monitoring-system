@@ -1,60 +1,44 @@
 import React, {useEffect, useState} from 'react';
 import axios from 'axios';
 import Chart from "./modules/Chart";
+import './App.css'
 
-const testdata = [
-    {
-        name: 'Page A', uv: 4000, pv: 2400, amt: 2400,
-    },
-    {
-        name: 'Page B', uv: 3000, pv: 1398, amt: 2210,
-    },
-    {
-        name: 'Page C', uv: 2000, pv: 9800, amt: 2290,
-    },
-    {
-        name: 'Page D', uv: 2780, pv: 3908, amt: 2000,
-    },
-    {
-        name: 'Page E', uv: 1890, pv: 4800, amt: 2181,
-    },
-    {
-        name: 'Page F', uv: 2390, pv: 3800, amt: 2500,
-    },
-    {
-        name: 'Page G', uv: 3490, pv: 4300, amt: 2100,
-    },
-];
+const timeFormat = (date) => date.substring(11, 19);
 
 function App() {
-    const [eCO2, setECO2] = useState([{eCO2: 0, date: new Date().toISOString()}])
-    const [TVOC, setTVOC] = useState([{TVOC: 0, date: new Date().toISOString()}])
-    const [temp, setTemp] = useState([{Temp: 0, date: new Date().toISOString()}])
-    const [accel, setAccel] = useState([{x: 0, y:0, z:0, date: new Date().toISOString()}])
+    const initialDate = timeFormat(new Date().toISOString());
+    const [eCO2, setECO2] = useState([{eCO2: 0, date: initialDate}])
+    const [TVOC, setTVOC] = useState([{TVOC: 0, date: initialDate}])
+    const [temp, setTemp] = useState([{Temp: 0, date: initialDate}])
+    const [accel, setAccel] = useState([{x: 0, y:0, z:0, date: initialDate}])
 
     useEffect(() => {
         const refresh = () => {
-            const from = new Date(Date.now() - 20000).toISOString()
             axios.get(`/api/1/sensor?size=10`)
                 .then(response => {
                     const data = response.data["sensorData"];
-                    setECO2(data.map(col => ({eCO2: col["eco2"], date: col["createdDate"]})).reverse())
-                    setTVOC(data.map(col => ({TVOC: col["tvoc"], date: col["createdDate"]})).reverse())
-                    setTemp(data.map(col => ({Temp: col["temp"], date: col["createdDate"]})).reverse())
-                    setAccel(data.map(col => ({x: col["accel"]["x"], y: col["accel"]["y"], z: col["accel"]["z"], date: col["createdDate"]})).reverse())
+                    if(data === undefined) return;
+
+                    setECO2(data.map(col => ({eCO2: col["eco2"], date: timeFormat(col["createdDate"])})).reverse())
+                    setTVOC(data.map(col => ({TVOC: col["tvoc"], date: timeFormat(col["createdDate"])})).reverse())
+                    setTemp(data.map(col => ({Temp: col["temp"], date: timeFormat(col["createdDate"])})).reverse())
+                    setAccel(data.map(col => ({x: col["accel"]["x"], y: col["accel"]["y"], z: col["accel"]["z"], date: timeFormat(col["createdDate"])})).reverse())
                 })
                 .catch(error => console.log(error))
         }
 
-        setInterval(refresh, 1000)
+        setInterval(refresh, 2000)
     }, []);
 
     return (
-        <div>
-            <Chart data={eCO2} name="date" stroke={{eCO2: "#FF0000"}}/>
-            <Chart data={TVOC} name="date" stroke={{TVOC: "#00FF00"}}/>
-            <Chart data={temp} name="date" stroke={{Temp: "#0000FF"}}/>
-            <Chart data={accel} name="date" stroke={{x: "#FF0000", y: "#00FF00", z: "#0000FF"}}/>
+        <div className="app">
+            <h1 className="app__title">Sensor Monitoring Panel</h1>
+            <div className="app__chart">
+                <Chart title="Equivalent CO2 (ppm)" data={eCO2} name="date" domain={[0, 2000]} stroke={{eCO2: "#7900FF"}}/>
+                <Chart title="Total Volatile Organic Compounds (ppb)" data={TVOC} name="date" domain={[0, 500]} stroke={{TVOC: "#548CFF"}}/>
+                <Chart title="Temperature (&deg;C)" data={temp} name="date" domain={[20, 40]} stroke={{Temp: "#FF00BE"}}/>
+                <Chart title="Accelerometer (m/s)" data={accel} name="date" domain={[-15, 15]} stroke={{x: "#FF0000", y: "#00FF00", z: "#0000FF"}}/>
+            </div>
         </div>
     );
 }
