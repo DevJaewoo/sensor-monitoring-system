@@ -53,22 +53,15 @@ class MainActivity : AppCompatActivity() {
                 val row = array.getJSONObject(i)
 
                 val date = row.getString("createdDate").ISOStringToFloat()
-                eco2.add(Entry(date, row.getInt("eco2").toFloat()))
-                tvoc.add(Entry(date, row.getInt("tvoc").toFloat()))
-                temp.add(Entry(date, row.getDouble("temp").toFloat()))
+                eco2.add(0, Entry(date, row.getInt("eco2").toFloat()))
+                tvoc.add(0, Entry(date, row.getInt("tvoc").toFloat()))
+                temp.add(0, Entry(date, row.getDouble("temp").toFloat()))
 
                 val accel = row.getJSONObject("accel")
-                accelX.add(Entry(date, accel.getDouble("x").toFloat()))
-                accelY.add(Entry(date, accel.getDouble("y").toFloat()))
-                accelZ.add(Entry(date, accel.getDouble("z").toFloat()))
+                accelX.add(0, Entry(date, accel.getDouble("x").toFloat()))
+                accelY.add(0, Entry(date, accel.getDouble("y").toFloat()))
+                accelZ.add(0, Entry(date, accel.getDouble("z").toFloat()))
             }
-
-            eco2.reverse()
-            tvoc.reverse()
-            temp.reverse()
-            accelX.reverse()
-            accelY.reverse()
-            accelZ.reverse()
 
             binding.chartECO2.setData(eco2, "eCO2", "#7900FF")
             binding.chartTVOC.setData(tvoc, "TVOC", "#548CFF")
