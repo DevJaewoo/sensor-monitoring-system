@@ -1,10 +1,7 @@
 import React, { PureComponent } from 'react';
-import {
-    LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer,
-} from 'recharts';
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import './Chart.css'
 
-//this.props.data
 class Chart extends PureComponent {
     render() {
         return (
